@@ -1,0 +1,282 @@
+swagger: "2.0"
+info:
+  title: user-management-service API
+  description: API for user & group management service.
+  version: 1.0.0
+
+host: localhost:8000
+schemes:
+  - http
+
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: Returns a list of users.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserList"
+        500:
+          description: Internal server error.
+    post:
+      tags:
+        - users
+      summary: Creates a new user.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          schema:
+            $ref: "#/definitions/CreateUserRequest"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad input. 
+        500:
+          description: Internal server error.
+  /users/{userID}:
+    get:
+      tags:
+        - users
+      summary: Returns a user by ID.
+      parameters:
+        - in: path
+          name: userID
+          required: true
+          type: integer
+          description: The ID of the user to return.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad input. 
+        404:
+          description: No entries found. 
+        500:
+          description: Internal server error.
+    put:
+      tags:
+        - users
+      summary: Modifies user.
+      parameters:
+        - in: path
+          name: userID
+          required: true
+          type: integer
+          description: The ID of the user to return.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          schema:
+            $ref: "#/definitions/CreateUserRequest"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad input. 
+        404:
+          description: No entries found. 
+        500:
+          description: Internal server error.
+    delete:
+      tags:
+        - users
+      summary: Deletes the user with the specified ID.
+      parameters:
+        - in: path
+          name: userID
+          required: true
+          type: integer
+          description: The ID of the user to delete.
+      responses:
+        204:
+          description: No Content.
+  /groups:
+    get:
+      tags:
+        - groups
+      summary: Returns a list of groups.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/GroupList"
+        500:
+          description: Internal server error.
+    post:
+      tags:
+        - groups
+      summary: Creates a new group.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: group
+          schema:
+            $ref: "#/definitions/CreateGroupRequest"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Group"
+        400:
+          description: Bad input. 
+        500:
+          description: Internal server error.
+  /groups/{groupID}:
+    get:
+      tags:
+        - groups
+      summary: Returns a group by ID.
+      parameters:
+        - in: path
+          name: groupID
+          required: true
+          type: integer
+          description: The ID of the group to return.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Group"
+        400:
+          description: Bad input. 
+        404:
+          description: No entries found. 
+        500:
+          description: Internal server error.
+    put:
+      tags:
+        - groups
+      summary: Modifies group.
+      parameters:
+        - in: path
+          name: groupID
+          required: true
+          type: integer
+          description: The ID of the group to return.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: group
+          schema:
+            $ref: "#/definitions/CreateGroupRequest"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Group"
+        400:
+          description: Bad input. 
+        404:
+          description: No entries found. 
+        500:
+          description: Internal server error.
+    delete:
+      tags:
+        - groups
+      summary: Deletes the group with the specified ID.
+      parameters:
+        - in: path
+          name: groupID
+          required: true
+          type: integer
+          description: The ID of the group to delete.
+      responses:
+        204:
+          description: No Content.
+  /groups/{groupID}/users:
+    get:
+      tags:
+        - groups
+      summary: Returns a group with all its users.
+      parameters:
+        - in: path
+          name: groupID
+          required: true
+          type: integer
+          description: The ID of the group to return.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserList"
+        400:
+          description: Bad input. 
+        404:
+          description: No entries found. 
+        500:
+          description: Internal server error.
+
+definitions:
+  User:
+    properties:
+      user_id:
+        type: integer
+      group_id:
+        type: integer
+      email:
+        type: string
+      password:
+        type: string
+      name:
+        type: string
+  UserList:
+    type: array
+    items:
+      $ref: "#/definitions/User"
+  CreateUserRequest:
+    properties:
+      group_id:
+        type: integer
+      email:
+        type: string
+      password:
+        type: string
+      name:
+        type: string
+    required:  
+      - group_id
+      - email
+      - password
+      - name
+  Group:
+    properties:
+      group_id:
+        type: integer
+      name:
+        type: string
+  GroupList:
+    type: array
+    items:
+      $ref: "#/definitions/Group"
+  CreateGroupRequest:
+    properties:
+      name:
+        type: string
+    required:  
+      - name

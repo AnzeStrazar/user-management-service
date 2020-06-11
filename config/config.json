@@ -1,0 +1,10 @@
+{
+    "httpport": "8080",
+    "db": {
+        "host": "localhost",
+        "port": "48000",
+        "user": "user-management-service",
+        "password": "user-management-service",
+        "database": "user-management-service"
+    }
+}

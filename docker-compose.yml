@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DATABASE: "user-management-service"
+      POSTGRES_USER: "user-management-service"
+      POSTGRES_PASSWORD: "user-management-service"
+      POSTGRES_ENCODING: "UNICODE"
+    ports:
+      - "48000:5432"
+
+  swagger:
+    image: quay.io/goswagger/swagger
+    restart: always
+    command: serve --no-open -p=5050 /openapi.yaml
+    volumes:
+      - ./docs/openapi.yaml:/openapi.yaml
+    ports:
+      - "5050:5050"
+
+  user-management-service:
+    build: .
+    restart: always
+    environment:
+      APP_PORT: "8080"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USER: "user-management-service"
+      DB_DBNAME: "user-management-service"
+      DB_PASSWORD: "user-management-service"
+    ports:
+      - "8000:8080"
+    depends_on:
+      - db
